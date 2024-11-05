@@ -8,7 +8,7 @@ const authController = require('./controllers/authController');
 const gameController = require('./controllers/gameController');
 const app = express();
 
-const PORT = 3001; //process.env.PORT || 6000;
+const PORT =process.env.PORT || 6000;
 
 // Connect to MongoDB
 connectDB();
