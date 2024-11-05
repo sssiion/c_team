@@ -12,7 +12,7 @@ const getGameState = async (req, res) => {
       return res.status(200).json({ gameState: gameState.gameState });
     } else {
       return res.status(404).json({ message: 'Game state not found' });
-    }
+      }
   } catch (error) {
     console.error('Error retrieving game state:', error);
     return res.status(500).json({ message: 'Server error' });

@@ -15,7 +15,7 @@ const login = async (req, res) => {
       await newUser.save();
 
       // 게임 상태 초기화 및 생성
-      const newGameState = new GameState({ userId, gameState: {} });
+      const newGameState = new GameState({ userId, state: {} });
       await newGameState.save();
 
       // 새로운 사용자 응답
@@ -26,7 +26,7 @@ const login = async (req, res) => {
 
       if (gameState) {
         // 기존 게임 상태 전송
-        return res.status(200).json({ message: 'Resuming game', newUser: false, gameState: gameState.gameState });
+        return res.status(200).json({ message: 'Resuming game', newUser: false, gameState: gameState.state });
       } else {
         // 게임 상태가 없는 경우 새 상태 생성
         const newGameState = new GameState({ userId, gameState: {} });

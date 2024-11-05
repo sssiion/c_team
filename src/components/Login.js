@@ -13,7 +13,7 @@ const Login = ({ setCurrentUser }) => {
             setCurrentUser(data.user); // 로그인 성공 시 사용자 설정
             navigate('/webgl');
         } catch (error) {
-            alert(error.message); // 에러 메시지 출력
+            alert(error.message + "여기 오류1"); // 에러 메시지 출력
         }
     };
 

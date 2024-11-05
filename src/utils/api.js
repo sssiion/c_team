@@ -8,7 +8,7 @@ export const loginUser = async (userId) => {
     
     if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'Login failed'); // 에러 처리
+        throw new Error(data.message+"여기에러2" || 'Login failed'); // 에러 처리
     }
 
     return await response.json(); // JSON 응답 반환
