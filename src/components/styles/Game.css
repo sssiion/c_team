@@ -1,0 +1,32 @@
+/* src/styles/Game.css */
+.game-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .game-title {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333333;
+  }
+  
+  .player-status {
+    margin: 10px 0;
+  }
+  
+  .save-button {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #45a049; /* Darker green */
+  }
+  
