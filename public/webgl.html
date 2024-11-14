@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
   <head>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | savefile_pre</title>
+    <title>Unity WebGL Player | caps_test_score_increase</title>
     <link rel="shortcut icon" href="assets/TemplateData/favicon.ico">
     <link rel="stylesheet" href="assets/TemplateData/style.css">
   </head>
@@ -18,11 +19,206 @@
       </div>
       <div id="unity-warning"> </div>
       <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
+        <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">savefile_pre</div>
+        <div id="unity-build-title">caps_test_score_increase</div>
       </div>
     </div>
-    <script src="./script.js"> </script>
+    <script>
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
+
+
+
+
+      // // Unity 인스턴스가 준비되었을 때 userId를 Unity에 전달
+      // var buildUrl = "Build";
+      // var config = {
+      //     dataUrl: buildUrl + "/webgl_test.data.data.unityweb",
+      //     frameworkUrl: buildUrl + "/webgl_test.data.framework.js.unityweb",
+      //     codeUrl: buildUrl + "/webgl_test.data.wasm.unityweb",
+      //     streamingAssetsUrl: "StreamingAssets",
+      //     companyName: "YourCompany",
+      //     productName: "YourProduct",
+      //     productVersion: "1.0"
+      // };
+
+      // createUnityInstance(document.querySelector("#unityContainer"), config, (progress) => {
+      //     console.log("Loading progress: " + progress);
+      // }).then((unityInstance) => {
+      //     console.log("Unity instance created");
+      // }).catch((message) => {
+      //     alert(message);
+      // });
+
+      var canvas = document.querySelector("#unity-canvas");
+
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      //var buildUrl = "Build";
+      var loaderUrl = "assets/webgl_test.loader.js";// buildUrl + "/database_pro.loader.js"
+      var config = {
+        arguments: [],
+        dataUrl: "assets/webgl_test.data",// buildUrl + "/database_pro.data",
+        frameworkUrl: "assets/webgl_test.framework.js",//buildUrl + "/database_pro.framework.js",
+        codeUrl: "assets/webgl_test.wasm",//buildUrl + "/database_pro.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "savefile_pre",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+
+              // URL에서 userId 파라미터를 가져오는 함수
+      function getUserIdFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('userId');
+      }
+
+      function ReceiveCharacterPosition(json) {
+        const positionData = JSON.parse(json);
+        console.log("Received Character Position:", positionData);
+
+        // 필요한 경우 이 데이터를 전역 변수로 저장하거나 서버에 전송할 수 있습니다.
+        window.characterPosition = {
+          x: positionData.x,
+          y: positionData.y
+        };
+      } 
+
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                document.querySelector("#unity-loading-bar").style.display = "none";
+                document.querySelector("#unity-fullscreen-button").onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+
+                // const userId = getUserIdFromURL();
+                // if (userId) {
+                //     unityInstance.SendMessage('GameManagerObject', 'SetUserId', userId);
+                //     console.log(userId);
+                // } else {
+                //     console.warn('URL에 userId가 없습니다.');
+                // }
+
+                // Unity 인스턴스가 로드된 후 userId 전달
+                const userId = sessionStorage.getItem('userId');
+                if (userId) {
+                  console.log('Retrieved userId from sessionStorage:', userId);
+                  unityInstance.SendMessage('GameManagerObject', 'SetUserId', userId);
+                } else {
+                    console.warn('userId를 sessionStorage에서 찾을 수 없습니다.');
+                }
+
+                const selectedSlot = sessionStorage.getItem('selectedSlot');
+                if (selectedSlot) {
+                  console.log(`웹에서 선택된 슬롯: ${selectedSlot}`);
+                  unityInstance.SendMessage('GameManagerObject', 'SetSelectedSlot', selectedSlot);
+                } else {
+                  console.warn('선택된 슬롯이 웹에서 설정되지 않았습니다.');
+                }
+
+                loadGameStateForSelectedSlot();
+
+
+              }).catch((message) => {
+                alert(message);
+              });
+            };
+
+      document.body.appendChild(script);
+
+      async function loadGameStateForSelectedSlot() {
+        const userId = sessionStorage.getItem('userId');
+        const selectedSlot = parseInt(sessionStorage.getItem('selectedSlot'), 10);
+        console.log(`Selected slot in webgl.html: ${selectedSlot}`);
+
+        if (!userId || isNaN(selectedSlot)) {
+          alert('User ID 또는 슬롯이 설정되지 않았습니다.');
+          console.warn('User ID 또는 선택된 슬롯에 문제가 있습니다:', { userId, selectedSlot });
+          return;
+        }
+
+        try {
+          const response = await axios.get(`/api/getGameState/${userId}`);
+          const { gameState, playerStatus, playerStatus2, playerStatus3 } = response.data;
+          console.log('서버 응답 데이터:', response.data);
+
+          let selectedPlayerStatus;
+          switch (selectedSlot) {
+            case 1:
+              selectedPlayerStatus = playerStatus;
+              break;
+            case 2:
+              selectedPlayerStatus = playerStatus2;
+              break;
+            case 3:
+              selectedPlayerStatus = playerStatus3;
+              break;
+            default:
+              selectedPlayerStatus = playerStatus; // 기본값은 슬롯 1
+              console.warn('유효하지 않은 선택된 슬롯 값이 제공되었습니다. 기본값으로 슬롯 1을 사용합니다.');
+          }
+
+          if (selectedPlayerStatus) {
+            console.log(`불러온 플레이어 상태 - X: ${selectedPlayerStatus.x}, Y: ${selectedPlayerStatus.y}`);
+            // 여기에 상태를 사용하여 게임 상태를 초기화하는 로직 추가
+          } else {
+            alert('선택된 슬롯에 저장된 데이터를 찾을 수 없습니다.');
+            console.warn('선택된 슬롯에 대한 데이터가 존재하지 않습니다:', { selectedSlot, playerStatus, playerStatus2, playerStatus3 });
+          }
+        } catch (error) {
+          console.error('게임 상태 로드 중 오류 발생:', error);
+        }
+      }
+
+    </script>
   </body>
 </html>

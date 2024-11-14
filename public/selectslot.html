@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Select Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .slot-button {
+            display: block; /* 세로로 나열되도록 설정 */
+            margin: 15px auto;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            width: 200px;
+        }
+        .slot-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Slot</h1>
+    <button id="slot1Button" class="slot-button" onclick="handleSlotSelection(1)">Slot 1</button>
+    <button id="slot2Button" class="slot-button" onclick="handleSlotSelection(2)">Slot 2</button>
+    <button id="slot3Button" class="slot-button" onclick="handleSlotSelection(3)">Slot 3</button>
+
+    <script>
+        function handleSlotSelection(slotNumber) {
+            sessionStorage.setItem('selectedSlot', slotNumber); // 선택된 슬롯을 저장
+            console.log(`Slot ${slotNumber} selected`);
+
+            // 선택된 슬롯에 따라 WebGL 페이지로 리디렉션
+            window.location.href = '/webgl';
+        }
+    </script>
+</body>
+</html>

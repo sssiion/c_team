@@ -3,6 +3,7 @@ form.addEventListener('submit', async (event) => {
   event.preventDefault(); // 기본 폼 제출 방지
 
   const userId = document.getElementById('userId').value;
+  const userPw = document.getElementById('userPw').value; //(+)userPw 받을 변수
 
   try {
     const response = await fetch('/api/login', {
@@ -10,10 +11,10 @@ form.addEventListener('submit', async (event) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId }), // JSON 형식으로 요청 본문에 포함
+      body: JSON.stringify({ userId, userPw }), // JSON 형식으로 요청 본문에 포함 (+) userPW 추가
     });
 
-    const data = await response.json();
+    const data = await response.json(); 
 
     // 응답에 따라 처리
     if (response.ok) {

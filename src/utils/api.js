@@ -1,9 +1,8 @@
-
-export const loginUser = async (userId) => {
+export const loginUser = async (userId, userPw) => {
     const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId, userPw }),
     });
     
     if (!response.ok) {
